@@ -1,0 +1,119 @@
+# Sky Power Estimation Configuration
+
+# Data Configuration
+data:
+  image_size: 224
+  sequence_length: 12  # Number of timesteps for temporal modeling
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  num_workers: 4
+
+# Location Configuration (for sun position calculation)
+location:
+  latitude: 37.7749  # San Francisco, CA (example)
+  longitude: -122.4194
+  altitude: 10  # meters
+  timezone: "US/Pacific"
+
+# Weather Features
+weather:
+  features:
+    - temperature
+    - humidity
+    - pressure
+    - wind_speed
+    - wind_direction
+    - dew_point
+    - ghi  # Global Horizontal Irradiance (if available)
+    - dni  # Direct Normal Irradiance (if available)
+    - dhi  # Diffuse Horizontal Irradiance (if available)
+
+# Sun Position Features
+sun_position:
+  features:
+    - zenith
+    - azimuth
+    - apparent_elevation
+    - equation_of_time
+
+# Model Configuration
+model:
+  # Image Encoder
+  image_encoder:
+    backbone: "resnet50"  # Options: resnet18, resnet34, resnet50, mobilenet_v3_small, mobilenet_v3_large, efficientnet_b0
+    pretrained: true
+    freeze_backbone: false
+    image_feature_dim: 512
+
+  # Temporal Encoder
+  temporal_encoder:
+    type: "transformer"  # Options: lstm, gru, transformer
+    hidden_dim: 256
+    num_layers: 3
+    num_heads: 8  # For transformer only
+    dropout: 0.1
+    bidirectional: true  # For LSTM/GRU only
+
+  # Fusion Layer
+  fusion:
+    method: "attention"  # Options: concat, attention, gated
+    hidden_dim: 512
+    dropout: 0.2
+
+  # Output Head
+  output:
+    hidden_dims: [256, 128]
+    dropout: 0.3
+    activation: "gelu"
+
+# Training Configuration
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler:
+    type: "cosine"  # Options: step, cosine, plateau
+    warmup_epochs: 5
+    min_lr: 0.00001
+  early_stopping:
+    patience: 15
+    min_delta: 0.0001
+  gradient_clip: 1.0
+  mixed_precision: true
+
+# Loss Configuration
+loss:
+  type: "mse"  # Options: mse, mae, huber, combined
+  huber_delta: 1.0
+
+# Augmentation Configuration
+augmentation:
+  train:
+    horizontal_flip: true
+    vertical_flip: false
+    rotation: 15
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.1
+    gaussian_blur: true
+    random_crop: true
+  val:
+    center_crop: true
+
+# Logging Configuration
+logging:
+  log_interval: 10
+  save_interval: 5
+  use_tensorboard: true
+  use_wandb: false
+  wandb_project: "sky-power-estimation"
+
+# Paths
+paths:
+  data_dir: "./data"
+  output_dir: "./outputs"
+  checkpoint_dir: "./checkpoints"
+  log_dir: "./logs"
