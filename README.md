@@ -13,7 +13,7 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#-overview)
 - [How It Works](#-how-it-works)
@@ -34,7 +34,7 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
 **PV Power Estimation** is an advanced deep learning system that predicts DC power output from solar photovoltaic (PV) installations by combining multiple data sources:
 
@@ -49,7 +49,7 @@ This multi-modal approach significantly outperforms single-source prediction met
 
 ---
 
-## 🔄 How It Works
+## How It Works
 
 ### 1️⃣ Data Acquisition
 ```
@@ -80,7 +80,7 @@ This multi-modal approach significantly outperforms single-source prediction met
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
@@ -154,7 +154,7 @@ This multi-modal approach significantly outperforms single-source prediction met
 
 ---
 
-## ✨ Features
+## Features
 
 ### Core Features
 - ✅ **Multi-Modal Learning**: Combines images, weather, and sun position
@@ -184,7 +184,7 @@ This multi-modal approach significantly outperforms single-source prediction met
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Deep Learning Frameworks
 | Library | Version | Purpose |
@@ -276,7 +276,7 @@ PV-Power-Estimation/
 
 ---
 
-## 🌿 Branch Overview
+## Branch Overview
 
 | Branch | Description | Status |
 |--------|-------------|--------|
@@ -287,7 +287,7 @@ PV-Power-Estimation/
 
 ### Branch Details
 
-#### 🌟 `feature/complete-multimodal-pipeline`
+#### `feature/complete-multimodal-pipeline`
 The main implementation branch with:
 - Complete multi-modal model architecture
 - All CNN backbones (ResNet, MobileNet, EfficientNet)
@@ -303,7 +303,7 @@ Alternative implementation with:
 - Simplified training script
 - Test data included
 
-#### 🎯 `feature/core-minimal-implementation`
+#### `feature/core-minimal-implementation`
 Lightweight implementation with:
 - Core feature extraction
 - Basic data loading
@@ -312,7 +312,7 @@ Lightweight implementation with:
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -354,7 +354,7 @@ pip install -e .
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ### Training with Synthetic Data (Testing)
 
@@ -394,7 +394,7 @@ python scripts/evaluate.py \
 
 ---
 
-## 💡 Usage Examples
+## Usage Examples
 
 ### Python API - Training
 
@@ -505,7 +505,7 @@ while True:
 
 ---
 
-## 📖 API Reference
+## API Reference
 
 ### SkyPowerModel
 
@@ -549,7 +549,7 @@ predictor.get_cloud_features(image)
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Model Configuration (config.yaml)
 
@@ -603,7 +603,7 @@ training:
 
 ---
 
-## 📊 Datasets
+## Datasets
 
 ### Required Data Format
 
@@ -640,7 +640,7 @@ data/
 
 ---
 
-## 🎯 Scope & Applications
+## Scope & Applications
 
 ### Primary Applications
 
@@ -669,7 +669,7 @@ data/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please follow these steps:
 
@@ -691,7 +691,7 @@ pytest tests/
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
@@ -701,18 +701,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Repository**: [github.com/Pradsey5010/PV-Power-Estimation](https://github.com/Pradsey5010/PV-Power-Estimation)
 - **Issues**: [GitHub Issues](https://github.com/Pradsey5010/PV-Power-Estimation/issues)
+- Contact: +1 480-797-3843
+- Email: pradyumnamand@gmail.com 
 
 ---
 
-## 🙏 Acknowledgments
 
-- PyTorch team for the deep learning framework
-- pvlib developers for solar position calculations
-- timm library for pretrained models
-- Open-source solar forecasting research community
-
----
-
-<p align="center">
-  Made with ❤️ for sustainable energy
-</p>
