@@ -140,66 +140,17 @@ This multi-modal approach significantly outperforms single-source prediction met
 
 ## Architecture
 
-```
-╔══════════════════════════════════════════════════════════════════════════╗
-║                     PV POWER ESTIMATION ARCHITECTURE                      ║
-╠══════════════════════════════════════════════════════════════════════════╣
-║                                                                           ║
-║   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                  ║
-║   │  SKY IMAGE  │    │   WEATHER   │    │    SUN      │                  ║
-║   │   (RGB)     │    │   SENSORS   │    │  POSITION   │                  ║
-║   │  224x224    │    │   9 features│    │  4 features │                  ║
-║   └──────┬──────┘    └──────┬──────┘    └──────┬──────┘                  ║
-║          │                  │                  │                          ║
-║          ▼                  └────────┬─────────┘                          ║
-║   ┌──────────────┐                   ▼                                    ║
-║   │  CNN ENCODER │          ┌──────────────────┐                          ║
-║   │              │          │  WEATHER + SUN   │                          ║
-║   │ • ResNet     │          │     ENCODER      │                          ║
-║   │ • MobileNet  │          │   (MLP + Norm)   │                          ║
-║   │ • EfficientNet│         └────────┬─────────┘                          ║
-║   └──────┬───────┘                   │                                    ║
-║          │                           │                                    ║
-║          │    ┌──────────────────────┘                                    ║
-║          │    │                                                           ║
-║          ▼    ▼                                                           ║
-║   ┌─────────────────────────────────────┐                                 ║
-║   │       TEMPORAL ENCODER              │                                 ║
-║   │                                     │                                 ║
-║   │  ┌───────────┐    ┌───────────┐    │                                 ║
-║   │  │TRANSFORMER│ OR │   LSTM    │    │                                 ║
-║   │  │           │    │(Bi-direct)│    │                                 ║
-║   │  │• 3 layers │    │• 2 layers │    │                                 ║
-║   │  │• 8 heads  │    │• Attention│    │                                 ║
-║   │  └───────────┘    └───────────┘    │                                 ║
-║   └─────────────────┬───────────────────┘                                 ║
-║                     │                                                     ║
-║                     ▼                                                     ║
-║   ┌─────────────────────────────────────┐                                 ║
-║   │         FUSION LAYER                │                                 ║
-║   │                                     │                                 ║
-║   │  • Cross-Attention Fusion           │                                 ║
-║   │  • Gated Fusion                     │                                 ║
-║   │  • Bilinear Pooling                 │                                 ║
-║   │  • Simple Concatenation             │                                 ║
-║   └─────────────────┬───────────────────┘                                 ║
-║                     │                                                     ║
-║                     ▼                                                     ║
-║   ┌─────────────────────────────────────┐                                 ║
-║   │         OUTPUT HEAD                 │                                 ║
-║   │                                     │                                 ║
-║   │  Linear(512) → 256 → 128 → 1        │                                 ║
-║   │  + LayerNorm + GELU + Dropout       │                                 ║
-║   └─────────────────┬───────────────────┘                                 ║
-║                     │                                                     ║
-║                     ▼                                                     ║
-║            ┌─────────────────┐                                            ║
-║            │   DC POWER (W)  │                                            ║
-║            │  + Uncertainty  │                                            ║
-║            └─────────────────┘                                            ║
-║                                                                           ║
-╚══════════════════════════════════════════════════════════════════════════╝
-```
+<p align="center">
+  <img src="assets/architecture.png" alt="PV Power Estimation Architecture" width="600">
+</p>
+
+The architecture shows the complete data flow:
+
+1. **Input Layer**: Sky Image (RGB 224×224), Weather Sensors (9 features), Sun Position (4 features)
+2. **Encoding**: CNN Encoder (ResNet/MobileNet/EfficientNet) + Weather & Sun Encoder (MLP + Norm)
+3. **Temporal Processing**: Transformer (3 layers, 8 heads) OR LSTM (Bi-directional, 2 layers)
+4. **Fusion**: Cross-Attention, Gated Fusion, Bilinear Pooling, or Simple Concatenation
+5. **Output**: Container layer (Linear 512→256→128→1 + LayerNorm + GELU + Dropout) → DC Power (W) + Uncertainty
 
 ### Model Components
 
