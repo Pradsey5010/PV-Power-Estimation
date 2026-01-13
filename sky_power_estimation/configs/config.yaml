@@ -1,0 +1,84 @@
+# PV Power Estimation Configuration
+
+# Data Configuration
+data:
+  image_size: 224
+  sequence_length: 12
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  num_workers: 4
+
+# Location Configuration
+location:
+  latitude: 37.7749
+  longitude: -122.4194
+  altitude: 10
+  timezone: "US/Pacific"
+
+# Weather Features
+weather:
+  features:
+    - temperature
+    - humidity
+    - pressure
+    - wind_speed
+    - wind_direction
+    - dew_point
+    - ghi
+    - dni
+    - dhi
+
+# Model Configuration
+model:
+  image_encoder:
+    backbone: "resnet50"
+    pretrained: true
+    freeze_backbone: false
+    image_feature_dim: 512
+
+  temporal_encoder:
+    type: "transformer"
+    hidden_dim: 256
+    num_layers: 3
+    num_heads: 8
+    dropout: 0.1
+    bidirectional: true
+
+  fusion:
+    method: "attention"
+    hidden_dim: 512
+    dropout: 0.2
+
+  output:
+    hidden_dims: [256, 128]
+    dropout: 0.3
+    activation: "gelu"
+
+# Training Configuration
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler:
+    type: "cosine"
+    warmup_epochs: 5
+    min_lr: 0.00001
+  early_stopping:
+    patience: 15
+    min_delta: 0.0001
+  gradient_clip: 1.0
+  mixed_precision: true
+
+# Loss Configuration
+loss:
+  type: "mse"
+  huber_delta: 1.0
+
+# Paths
+paths:
+  data_dir: "./data"
+  output_dir: "./outputs"
+  checkpoint_dir: "./checkpoints"
+  log_dir: "./logs"
