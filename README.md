@@ -13,24 +13,82 @@
 
 ---
 
+## 🚀 Try It Online (No Installation Required)
+
+Want to explore the project without any setup? Use these options:
+
+### Option 1: Google Colab (Recommended)
+Run the complete project directly in your browser with GPU support:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pradsey5010/PV-Power-Estimation/blob/main/notebooks/demo.ipynb)
+
+```python
+# Quick start in Colab - just run these cells:
+!git clone https://github.com/Pradsey5010/PV-Power-Estimation.git
+%cd PV-Power-Estimation/sky_power_estimation
+!pip install -r requirements.txt -q
+
+# Launch the dashboard
+!streamlit run dashboard/app.py &>/dev/null &
+from google.colab.output import eval_js
+print(eval_js("google.colab.kernel.proxyPort(8501)"))
+```
+
+### Option 2: GitHub Codespaces
+Launch a complete development environment in seconds:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Pradsey5010/PV-Power-Estimation)
+
+Once launched:
+```bash
+cd sky_power_estimation
+pip install -r requirements.txt
+streamlit run dashboard/app.py
+```
+
+### Option 3: Gitpod
+One-click cloud development environment:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Pradsey5010/PV-Power-Estimation)
+
+### Option 4: View Code Online
+Browse the source code directly on GitHub:
+- 📂 [Dashboard Code](https://github.com/Pradsey5010/PV-Power-Estimation/blob/main/sky_power_estimation/dashboard/app.py)
+- 🧠 [Model Architecture](https://github.com/Pradsey5010/PV-Power-Estimation/blob/main/sky_power_estimation/sky_power_estimation/models/)
+- 📊 [Utilities](https://github.com/Pradsey5010/PV-Power-Estimation/blob/main/sky_power_estimation/sky_power_estimation/utils/)
+
+### Quick Demo Commands
+For users who prefer command-line:
+
+```bash
+# One-liner to clone and run (requires Python 3.8+)
+git clone https://github.com/Pradsey5010/PV-Power-Estimation.git && \
+cd PV-Power-Estimation/sky_power_estimation && \
+pip install streamlit plotly torch torchvision numpy pandas pillow && \
+streamlit run dashboard/app.py
+```
+
+---
+
 ## Table of Contents
 
-- [Overview](#-overview)
-- [How It Works](#-how-it-works)
-- [Architecture](#-architecture)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
+- [Try It Online](#-try-it-online-no-installation-required)
+- [Overview](#overview)
+- [How It Works](#how-it-works)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
 - [Project Structure](#-project-structure)
-- [Branch Overview](#-branch-overview)
-- [Installation](#-installation)
-- [Quick Start](#-quick-start)
-- [Usage Examples](#-usage-examples)
-- [API Reference](#-api-reference)
-- [Configuration](#-configuration)
-- [Datasets](#-datasets)
-- [Scope & Applications](#-scope--applications)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Branch Overview](#branch-overview)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Usage Examples](#usage-examples)
+- [API Reference](#api-reference)
+- [Configuration](#configuration)
+- [Datasets](#datasets)
+- [Scope & Applications](#scope--applications)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
