@@ -13,59 +13,73 @@
 
 ---
 
-## 🚀 Try It Online (No Installation Required)
+## 🚀 Try It Online & Run Locally
 
-Want to explore the project without any setup? Use these options:
+### 🖥️ Run on Your Local Computer (Easiest Method)
 
-### Option 1: Google Colab (Recommended)
-Run the complete project directly in your browser with GPU support:
+**Step 1: Download the project**
+```bash
+git clone https://github.com/Pradsey5010/PV-Power-Estimation.git
+cd PV-Power-Estimation/sky_power_estimation
+```
+
+**Step 2: Install dependencies**
+```bash
+pip install streamlit plotly torch torchvision numpy pandas pillow scikit-learn pyyaml tqdm
+```
+
+**Step 3: Run the dashboard**
+```bash
+streamlit run dashboard/app.py
+```
+
+**Step 4: Open in browser**
+- The terminal will show: `Local URL: http://localhost:8501`
+- Open this URL in your browser: **http://localhost:8501**
+- If port 8501 is busy, try: `streamlit run dashboard/app.py --server.port 8502`
+
+> **Troubleshooting:**
+> - If you see "command not found", run: `python -m streamlit run dashboard/app.py`
+> - On Windows, use Command Prompt or PowerShell (not Git Bash)
+> - Make sure Python 3.8+ is installed: `python --version`
+
+---
+
+### ☁️ Run in Google Colab (No Local Setup)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pradsey5010/PV-Power-Estimation/blob/main/notebooks/demo.ipynb)
 
-```python
-# Quick start in Colab - just run these cells:
-!git clone https://github.com/Pradsey5010/PV-Power-Estimation.git
-%cd PV-Power-Estimation/sky_power_estimation
-!pip install -r requirements.txt -q
+The Colab notebook lets you:
+- ✅ Explore the model architecture
+- ✅ Generate synthetic sky images
+- ✅ Extract cloud features
+- ✅ Calculate sun position
+- ✅ Run power predictions
 
-# Launch the dashboard
-!streamlit run dashboard/app.py &>/dev/null &
-from google.colab.output import eval_js
-print(eval_js("google.colab.kernel.proxyPort(8501)"))
-```
+> **Note:** The interactive Streamlit dashboard works best on local computers. Colab is great for exploring the code and running predictions.
 
-### Option 2: GitHub Codespaces
-Launch a complete development environment in seconds:
+---
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Pradsey5010/PV-Power-Estimation)
+### 🌐 Other Online Options
 
-Once launched:
-```bash
-cd sky_power_estimation
-pip install -r requirements.txt
-streamlit run dashboard/app.py
-```
+| Platform | Link | Best For |
+|----------|------|----------|
+| **GitHub Codespaces** | [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Pradsey5010/PV-Power-Estimation) | Full dev environment |
+| **Gitpod** | [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Pradsey5010/PV-Power-Estimation) | Quick browser IDE |
+| **View Code** | [GitHub Repository](https://github.com/Pradsey5010/PV-Power-Estimation) | Browse source code |
 
-### Option 3: Gitpod
-One-click cloud development environment:
+---
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Pradsey5010/PV-Power-Estimation)
-
-### Option 4: View Code Online
-Browse the source code directly on GitHub:
-- 📂 [Dashboard Code](https://github.com/Pradsey5010/PV-Power-Estimation/blob/main/sky_power_estimation/dashboard/app.py)
-- 🧠 [Model Architecture](https://github.com/Pradsey5010/PV-Power-Estimation/blob/main/sky_power_estimation/sky_power_estimation/models/)
-- 📊 [Utilities](https://github.com/Pradsey5010/PV-Power-Estimation/blob/main/sky_power_estimation/sky_power_estimation/utils/)
-
-### Quick Demo Commands
-For users who prefer command-line:
+### 📱 Quick Commands Reference
 
 ```bash
-# One-liner to clone and run (requires Python 3.8+)
-git clone https://github.com/Pradsey5010/PV-Power-Estimation.git && \
-cd PV-Power-Estimation/sky_power_estimation && \
-pip install streamlit plotly torch torchvision numpy pandas pillow && \
+# Clone and run (copy-paste this entire block)
+git clone https://github.com/Pradsey5010/PV-Power-Estimation.git
+cd PV-Power-Estimation/sky_power_estimation
+pip install streamlit plotly torch torchvision numpy pandas pillow scikit-learn
 streamlit run dashboard/app.py
+
+# The dashboard will open automatically at http://localhost:8501
 ```
 
 ---
