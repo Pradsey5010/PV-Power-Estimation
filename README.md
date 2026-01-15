@@ -38,7 +38,7 @@ streamlit run dashboard/app.py
 
 ---
 
-### ☁️ Run in Google Colab (No Local Setup)
+### Run in Google Colab (No Local Setup)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pradsey5010/PV-Power-Estimation/blob/main/notebooks/demo.ipynb)
 
@@ -50,16 +50,6 @@ The Colab notebook lets you:
 - ✅ Run power predictions
 
 > **Note:** The interactive Streamlit dashboard works best on local computers. Colab is great for exploring the code and running predictions.
-
----
-
-### Other Online Options
-
-| Platform | Link | Best For |
-|----------|------|----------|
-| **GitHub Codespaces** | [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Pradsey5010/PV-Power-Estimation) | Full dev environment |
-| **Gitpod** | [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Pradsey5010/PV-Power-Estimation) | Quick browser IDE |
-| **View Code** | [GitHub Repository](https://github.com/Pradsey5010/PV-Power-Estimation) | Browse source code |
 
 ---
 
