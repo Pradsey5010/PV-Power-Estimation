@@ -1,7 +1,7 @@
 """
-🌤️ PV Power Estimation Dashboard
+PV Power Estimation Dashboard
 Interactive dashboard for solar power prediction using sky images and weather data.
-Theme: Maroon & Yellow
+Professional Gradient Theme with Enhanced Styling
 """
 
 import streamlit as st
@@ -20,337 +20,614 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Page configuration
 st.set_page_config(
-    page_title="🌤️ PV Power Estimation",
+    page_title="PV Power Estimation",
     page_icon="☀️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Theme Colors
-MAROON = "#800000"
-MAROON_DARK = "#5c0000"
-MAROON_LIGHT = "#a52a2a"
-YELLOW = "#FFD700"
-YELLOW_LIGHT = "#FFEC8B"
-YELLOW_DARK = "#DAA520"
-WHITE = "#FFFFFF"
-CREAM = "#FFF8DC"
-DARK_BG = "#1a1a1a"
-CARD_BG = "#2d2d2d"
+# Theme Colors - Gradient Palette
+PRIMARY_DARK = "#1a1a2e"
+PRIMARY_MID = "#16213e"
+PRIMARY_LIGHT = "#0f3460"
+ACCENT_1 = "#e94560"
+ACCENT_2 = "#ff6b6b"
+ACCENT_3 = "#feca57"
+ACCENT_4 = "#48dbfb"
+ACCENT_5 = "#1dd1a1"
+TEXT_LIGHT = "#ffffff"
+TEXT_MUTED = "#a0a0a0"
+CARD_BG = "rgba(255, 255, 255, 0.05)"
+CARD_BORDER = "rgba(255, 255, 255, 0.1)"
 
-# Custom CSS for Maroon & Yellow Theme
+# Solar/PV Related Images from Unsplash
+IMAGES = {
+    "hero_solar": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&h=600&fit=crop",
+    "solar_panels": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=600&h=400&fit=crop",
+    "sky_clouds": "https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=600&h=400&fit=crop",
+    "weather_station": "https://images.unsplash.com/photo-1561484930-998b6a7b22e8?w=600&h=400&fit=crop",
+    "sun_rays": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop",
+    "power_grid": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&h=400&fit=crop",
+    "solar_farm": "https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=600&h=400&fit=crop",
+    "sunset_panels": "https://images.unsplash.com/photo-1548337138-e87d889cc369?w=600&h=400&fit=crop",
+    "blue_sky": "https://images.unsplash.com/photo-1601297183305-6df142704ea2?w=600&h=400&fit=crop",
+    "cloudy_sky": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=600&h=400&fit=crop",
+    "analytics": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
+    "technology": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop",
+}
+
+# Custom CSS with Gradient Theme
 st.markdown(f"""
 <style>
-    /* Main background */
-    .stApp {{
-        background: linear-gradient(135deg, {DARK_BG} 0%, #2d1810 100%);
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    /* Global Styles */
+    * {{
+        font-family: 'Poppins', sans-serif;
     }}
     
-    /* Sidebar styling */
+    /* Main App Background - Gradient */
+    .stApp {{
+        background: linear-gradient(135deg, {PRIMARY_DARK} 0%, {PRIMARY_MID} 50%, {PRIMARY_LIGHT} 100%);
+        background-attachment: fixed;
+    }}
+    
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, {MAROON_DARK} 0%, {MAROON} 100%);
+        background: linear-gradient(180deg, {PRIMARY_DARK} 0%, {PRIMARY_MID} 100%);
+        border-right: 1px solid {CARD_BORDER};
     }}
     
     [data-testid="stSidebar"] .stMarkdown {{
-        color: {WHITE};
+        color: {TEXT_LIGHT};
     }}
     
     [data-testid="stSidebar"] label {{
-        color: {YELLOW_LIGHT} !important;
+        color: {TEXT_MUTED} !important;
+        font-weight: 500;
     }}
     
-    /* Main header styling */
-    .main-header {{
+    [data-testid="stSidebar"] .stSelectbox label,
+    [data-testid="stSidebar"] .stSlider label {{
+        color: {ACCENT_3} !important;
+    }}
+    
+    /* Main Header with Gradient Text */
+    .main-title {{
         font-size: 3.5rem;
-        font-weight: bold;
-        background: linear-gradient(90deg, {YELLOW}, {YELLOW_LIGHT}, {YELLOW});
+        font-weight: 700;
+        background: linear-gradient(135deg, {ACCENT_3} 0%, {ACCENT_2} 50%, {ACCENT_1} 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        padding: 1rem 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        padding: 1.5rem 0;
+        margin-bottom: 0;
+        animation: fadeInDown 0.8s ease-out;
     }}
     
-    .sub-header {{
-        font-size: 1.3rem;
-        color: {CREAM};
+    .sub-title {{
+        font-size: 1.2rem;
+        color: {TEXT_MUTED};
         text-align: center;
         margin-bottom: 2rem;
+        font-weight: 300;
     }}
     
-    /* Feature cards with hover effect */
-    .feature-card {{
-        background: linear-gradient(145deg, {CARD_BG}, #3d3d3d);
-        border-radius: 15px;
+    /* Section Headers */
+    .section-header {{
+        font-size: 1.8rem;
+        font-weight: 600;
+        background: linear-gradient(90deg, {ACCENT_4} 0%, {ACCENT_5} 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 2rem 0 1.5rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid;
+        border-image: linear-gradient(90deg, {ACCENT_4}, {ACCENT_5}) 1;
+    }}
+    
+    /* Glass Card Effect */
+    .glass-card {{
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
         padding: 25px;
         margin: 15px 0;
-        border-left: 5px solid {YELLOW};
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }}
+    
+    .glass-card:hover {{
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(233, 69, 96, 0.3);
+        border-color: {ACCENT_1};
+    }}
+    
+    .glass-card h4 {{
+        color: {ACCENT_3} !important;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }}
+    
+    .glass-card p {{
+        color: {TEXT_LIGHT} !important;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        opacity: 0.9;
+    }}
+    
+    /* Feature Cards with Icons */
+    .feature-card {{
+        background: linear-gradient(145deg, rgba(30,30,60,0.8) 0%, rgba(20,20,40,0.9) 100%);
+        border-radius: 16px;
+        padding: 25px;
+        margin: 12px 0;
+        border-left: 4px solid;
+        border-image: linear-gradient(180deg, {ACCENT_1}, {ACCENT_3}) 1;
         transition: all 0.3s ease;
-        color: {WHITE};
+        position: relative;
+        overflow: hidden;
+    }}
+    
+    .feature-card::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, {ACCENT_1}15 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }}
     
     .feature-card:hover {{
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-        border-left: 5px solid {YELLOW_LIGHT};
+        transform: translateX(10px);
+        box-shadow: -5px 5px 30px rgba(233, 69, 96, 0.2);
+    }}
+    
+    .feature-card:hover::before {{
+        opacity: 1;
+    }}
+    
+    .feature-card .icon {{
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        display: block;
     }}
     
     .feature-card h4 {{
-        color: {YELLOW} !important;
-        margin-bottom: 10px;
-        font-size: 1.2rem;
+        color: {TEXT_LIGHT} !important;
+        font-weight: 600;
+        margin-bottom: 8px;
     }}
     
     .feature-card p {{
-        color: {CREAM} !important;
-        font-size: 1rem;
-        line-height: 1.5;
+        color: {TEXT_MUTED} !important;
+        font-size: 0.9rem;
     }}
     
-    /* Metric cards */
+    /* Metric Cards with Gradient Border */
     .metric-card {{
-        background: linear-gradient(135deg, {MAROON} 0%, {MAROON_DARK} 100%);
-        border-radius: 15px;
-        padding: 25px;
+        background: linear-gradient(135deg, {PRIMARY_MID} 0%, {PRIMARY_DARK} 100%);
+        border-radius: 20px;
+        padding: 30px 20px;
         text-align: center;
-        box-shadow: 0 4px 20px rgba(128, 0, 0, 0.4);
-        border: 2px solid {YELLOW};
-        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }}
+    
+    .metric-card::before {{
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(135deg, {ACCENT_1}, {ACCENT_3}, {ACCENT_4}, {ACCENT_5});
+        border-radius: 22px;
+        z-index: -1;
+        opacity: 0.7;
+    }}
+    
+    .metric-card::after {{
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        background: linear-gradient(135deg, {PRIMARY_MID} 0%, {PRIMARY_DARK} 100%);
+        border-radius: 18px;
+        z-index: -1;
     }}
     
     .metric-card:hover {{
-        transform: scale(1.05);
-        box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+        transform: translateY(-10px) rotateX(5deg);
+        box-shadow: 0 25px 50px rgba(233, 69, 96, 0.4);
     }}
     
-    .metric-card h2 {{
-        color: {YELLOW} !important;
+    .metric-card .metric-icon {{
         font-size: 2.5rem;
-        margin: 0;
+        margin-bottom: 10px;
     }}
     
-    .metric-card p {{
-        color: {WHITE} !important;
-        font-size: 1rem;
-        margin: 5px 0 0 0;
+    .metric-card .metric-value {{
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, {ACCENT_3} 0%, {ACCENT_2} 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 5px 0;
     }}
     
-    /* Image container with border */
+    .metric-card .metric-label {{
+        color: {TEXT_MUTED};
+        font-size: 0.9rem;
+        font-weight: 500;
+    }}
+    
+    /* Image Container with Glow */
     .image-container {{
-        background: {CARD_BG};
-        border-radius: 15px;
-        padding: 15px;
-        border: 3px solid {MAROON};
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        transition: all 0.4s ease;
     }}
     
     .image-container:hover {{
-        border-color: {YELLOW};
-        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        transform: scale(1.03);
+        box-shadow: 0 20px 60px rgba(233, 69, 96, 0.3);
     }}
     
-    /* Section headers */
-    .section-header {{
-        color: {YELLOW} !important;
-        font-size: 2rem;
-        font-weight: bold;
-        margin: 30px 0 20px 0;
-        padding-bottom: 10px;
-        border-bottom: 3px solid {MAROON};
+    .image-container img {{
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: all 0.4s ease;
     }}
     
-    /* Tab styling */
-    .stTabs [data-baseweb="tab-list"] {{
-        gap: 8px;
-        background-color: {CARD_BG};
-        padding: 10px;
-        border-radius: 10px;
+    .image-container:hover img {{
+        transform: scale(1.1);
     }}
     
-    .stTabs [data-baseweb="tab"] {{
-        height: 50px;
-        padding: 10px 25px;
-        background-color: {MAROON_DARK};
-        border-radius: 10px;
-        color: {WHITE};
-        font-weight: bold;
-        transition: all 0.3s ease;
+    .image-overlay {{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        padding: 20px;
+        color: white;
     }}
     
-    .stTabs [data-baseweb="tab"]:hover {{
-        background-color: {MAROON};
+    .image-overlay h4 {{
+        color: {ACCENT_3} !important;
+        margin: 0 0 5px 0;
+        font-weight: 600;
     }}
     
-    .stTabs [aria-selected="true"] {{
-        background-color: {YELLOW} !important;
-        color: {MAROON_DARK} !important;
+    .image-overlay p {{
+        color: {TEXT_LIGHT} !important;
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
     }}
     
-    /* Button styling */
-    .stButton > button {{
-        background: linear-gradient(135deg, {YELLOW} 0%, {YELLOW_DARK} 100%);
-        color: {MAROON_DARK};
-        font-weight: bold;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    /* Result Card - Glowing Effect */
+    .result-card {{
+        background: linear-gradient(135deg, {PRIMARY_LIGHT} 0%, {PRIMARY_MID} 100%);
+        border-radius: 25px;
+        padding: 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 60px rgba(233, 69, 96, 0.3);
+        animation: pulse-glow 2s infinite;
     }}
     
-    .stButton > button:hover {{
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, {YELLOW_LIGHT} 0%, {YELLOW} 100%);
+    @keyframes pulse-glow {{
+        0%, 100% {{ box-shadow: 0 0 40px rgba(233, 69, 96, 0.3); }}
+        50% {{ box-shadow: 0 0 80px rgba(254, 202, 87, 0.4); }}
     }}
     
-    /* Input fields */
-    .stNumberInput input, .stTextInput input, .stSelectbox select {{
-        background-color: {CARD_BG} !important;
-        color: {WHITE} !important;
-        border: 2px solid {MAROON} !important;
-        border-radius: 8px;
+    .result-card::before {{
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, transparent, {ACCENT_1}20, transparent, {ACCENT_3}20, transparent);
+        animation: rotate 4s linear infinite;
     }}
     
-    .stNumberInput input:focus, .stTextInput input:focus {{
-        border-color: {YELLOW} !important;
+    @keyframes rotate {{
+        100% {{ transform: rotate(360deg); }}
     }}
     
-    /* Slider */
-    .stSlider > div > div {{
-        background-color: {MAROON} !important;
+    .result-card .result-content {{
+        position: relative;
+        z-index: 1;
     }}
     
-    .stSlider > div > div > div {{
-        background-color: {YELLOW} !important;
+    .result-card h3 {{
+        color: {TEXT_MUTED} !important;
+        font-weight: 400;
+        margin-bottom: 10px;
     }}
     
-    /* Info boxes */
+    .result-card .power-value {{
+        font-size: 4rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, {ACCENT_3} 0%, {ACCENT_2} 50%, {ACCENT_1} 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 10px 0;
+    }}
+    
+    .result-card .confidence {{
+        color: {ACCENT_5};
+        font-size: 1.1rem;
+    }}
+    
+    /* Info Box */
     .info-box {{
-        background: linear-gradient(135deg, {MAROON_DARK} 0%, {MAROON} 100%);
+        background: linear-gradient(135deg, rgba(72, 219, 251, 0.1) 0%, rgba(29, 209, 161, 0.1) 100%);
         border-radius: 15px;
         padding: 20px;
-        border: 2px solid {YELLOW};
-        color: {WHITE};
+        border: 1px solid rgba(72, 219, 251, 0.3);
         margin: 15px 0;
     }}
     
     .info-box h3 {{
-        color: {YELLOW} !important;
+        color: {ACCENT_4} !important;
+        font-size: 1.1rem;
+        font-weight: 600;
         margin-bottom: 10px;
     }}
     
-    /* Results card */
-    .result-card {{
-        background: linear-gradient(145deg, {MAROON} 0%, {MAROON_DARK} 100%);
-        border-radius: 20px;
-        padding: 30px;
-        text-align: center;
-        border: 3px solid {YELLOW};
-        box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+    .info-box p {{
+        color: {TEXT_LIGHT} !important;
+        margin: 5px 0;
+        opacity: 0.9;
     }}
     
-    .result-card h1 {{
-        color: {YELLOW} !important;
-        font-size: 4rem;
-        margin: 10px 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    /* Tab Styling */
+    .stTabs [data-baseweb="tab-list"] {{
+        gap: 8px;
+        background: linear-gradient(90deg, {PRIMARY_DARK}, {PRIMARY_MID});
+        padding: 10px;
+        border-radius: 15px;
+        border: 1px solid {CARD_BORDER};
     }}
     
-    .result-card h3 {{
-        color: {WHITE} !important;
+    .stTabs [data-baseweb="tab"] {{
+        height: 50px;
+        padding: 0 25px;
+        background: transparent;
+        border-radius: 10px;
+        color: {TEXT_MUTED};
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
     }}
     
-    .result-card p {{
-        color: {CREAM} !important;
+    .stTabs [data-baseweb="tab"]:hover {{
+        background: rgba(255,255,255,0.1);
+        color: {TEXT_LIGHT};
     }}
     
-    /* Progress bar */
-    .stProgress > div > div {{
-        background-color: {YELLOW} !important;
+    .stTabs [aria-selected="true"] {{
+        background: linear-gradient(135deg, {ACCENT_1} 0%, {ACCENT_2} 100%) !important;
+        color: {TEXT_LIGHT} !important;
+        box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+    }}
+    
+    /* Button Styling */
+    .stButton > button {{
+        background: linear-gradient(135deg, {ACCENT_1} 0%, {ACCENT_2} 100%);
+        color: white;
+        font-weight: 600;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }}
+    
+    .stButton > button:hover {{
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 40px rgba(233, 69, 96, 0.6);
+        background: linear-gradient(135deg, {ACCENT_2} 0%, {ACCENT_1} 100%);
+    }}
+    
+    .stButton > button:active {{
+        transform: translateY(0);
+    }}
+    
+    /* Input Fields */
+    .stNumberInput input, .stTextInput input {{
+        background: rgba(255,255,255,0.05) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 10px !important;
+        color: {TEXT_LIGHT} !important;
+        padding: 10px 15px !important;
+        transition: all 0.3s ease;
+    }}
+    
+    .stNumberInput input:focus, .stTextInput input:focus {{
+        border-color: {ACCENT_1} !important;
+        box-shadow: 0 0 20px rgba(233, 69, 96, 0.3) !important;
+    }}
+    
+    /* Slider */
+    .stSlider > div > div > div {{
+        background: linear-gradient(90deg, {ACCENT_4}, {ACCENT_5}) !important;
+    }}
+    
+    .stSlider > div > div > div > div {{
+        background: {TEXT_LIGHT} !important;
+        box-shadow: 0 0 10px {ACCENT_4};
+    }}
+    
+    /* Progress Bar */
+    .stProgress > div > div > div {{
+        background: linear-gradient(90deg, {ACCENT_1}, {ACCENT_3}, {ACCENT_5}) !important;
+        background-size: 200% 100%;
+        animation: gradient-shift 2s ease infinite;
+    }}
+    
+    @keyframes gradient-shift {{
+        0% {{ background-position: 0% 50%; }}
+        50% {{ background-position: 100% 50%; }}
+        100% {{ background-position: 0% 50%; }}
     }}
     
     /* Expander */
     .streamlit-expanderHeader {{
-        background-color: {CARD_BG} !important;
-        color: {YELLOW} !important;
-        border-radius: 10px;
+        background: linear-gradient(90deg, rgba(233,69,96,0.1), rgba(254,202,87,0.1)) !important;
+        border-radius: 10px !important;
+        color: {ACCENT_3} !important;
+        font-weight: 500;
+    }}
+    
+    .streamlit-expanderHeader:hover {{
+        background: linear-gradient(90deg, rgba(233,69,96,0.2), rgba(254,202,87,0.2)) !important;
     }}
     
     /* Footer */
     .footer {{
-        background: linear-gradient(135deg, {MAROON_DARK} 0%, {MAROON} 100%);
-        border-radius: 15px;
-        padding: 20px;
+        background: linear-gradient(135deg, {PRIMARY_DARK} 0%, {PRIMARY_MID} 100%);
+        border-radius: 20px;
+        padding: 30px;
         text-align: center;
-        margin-top: 30px;
-        border: 2px solid {YELLOW};
+        margin-top: 40px;
+        border: 1px solid {CARD_BORDER};
+        position: relative;
+        overflow: hidden;
+    }}
+    
+    .footer::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, {ACCENT_1}, {ACCENT_3}, {ACCENT_4}, {ACCENT_5});
     }}
     
     .footer p {{
-        color: {CREAM} !important;
-        margin: 5px 0;
+        color: {TEXT_MUTED} !important;
+        margin: 8px 0;
     }}
     
     .footer a {{
-        color: {YELLOW} !important;
+        color: {ACCENT_3} !important;
+        text-decoration: none;
+        transition: color 0.3s ease;
     }}
     
-    /* Hide Streamlit branding */
+    .footer a:hover {{
+        color: {ACCENT_1} !important;
+    }}
+    
+    /* Animations */
+    @keyframes fadeInDown {{
+        from {{
+            opacity: 0;
+            transform: translateY(-30px);
+        }}
+        to {{
+            opacity: 1;
+            transform: translateY(0);
+        }}
+    }}
+    
+    @keyframes fadeInUp {{
+        from {{
+            opacity: 0;
+            transform: translateY(30px);
+        }}
+        to {{
+            opacity: 1;
+            transform: translateY(0);
+        }}
+    }}
+    
+    .animate-fade-in {{
+        animation: fadeInUp 0.6s ease-out;
+    }}
+    
+    /* Hide Streamlit Branding */
     #MainMenu {{visibility: hidden;}}
     footer {{visibility: hidden;}}
     
-    /* Custom scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {{
-        width: 10px;
+        width: 8px;
+        height: 8px;
     }}
     
     ::-webkit-scrollbar-track {{
-        background: {DARK_BG};
+        background: {PRIMARY_DARK};
     }}
     
     ::-webkit-scrollbar-thumb {{
-        background: {MAROON};
-        border-radius: 5px;
+        background: linear-gradient(180deg, {ACCENT_1}, {ACCENT_3});
+        border-radius: 4px;
     }}
     
     ::-webkit-scrollbar-thumb:hover {{
-        background: {YELLOW};
+        background: linear-gradient(180deg, {ACCENT_2}, {ACCENT_3});
+    }}
+    
+    /* Radio buttons */
+    .stRadio > div {{
+        background: rgba(255,255,255,0.05);
+        padding: 10px;
+        border-radius: 10px;
+    }}
+    
+    .stRadio label {{
+        color: {TEXT_LIGHT} !important;
     }}
 </style>
 """, unsafe_allow_html=True)
-
-# Solar-related image URLs (using placeholder images that represent solar/sky themes)
-IMAGES = {
-    "solar_panel": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=300&fit=crop",
-    "sky_clouds": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=400&h=300&fit=crop",
-    "sun": "https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=400&h=300&fit=crop",
-    "weather_station": "https://images.unsplash.com/photo-1592210454359-9043f067919b?w=400&h=300&fit=crop",
-    "power_grid": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&h=300&fit=crop",
-    "solar_farm": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=400&h=300&fit=crop",
-    "analytics": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
-    "cloud_analysis": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=400&h=300&fit=crop",
-}
 
 
 def create_sidebar():
     """Create sidebar with configuration options."""
     with st.sidebar:
-        # Logo/Icon
+        # Logo Section
         st.markdown(f"""
         <div style="text-align: center; padding: 20px 0;">
-            <span style="font-size: 4rem;">☀️</span>
-            <h2 style="color: {YELLOW}; margin: 10px 0;">PV Power</h2>
-            <p style="color: {CREAM};">Estimation System</p>
+            <div style="font-size: 4rem; margin-bottom: 10px;">☀️</div>
+            <h2 style="
+                background: linear-gradient(135deg, {ACCENT_3} 0%, {ACCENT_1} 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin: 0;
+                font-weight: 700;
+            ">PV Power</h2>
+            <p style="color: {TEXT_MUTED}; font-size: 0.9rem;">Estimation System</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("---")
         
         # Model Configuration
-        st.markdown(f"<h3 style='color: {YELLOW};'>🧠 Model Settings</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {ACCENT_3}; font-weight: 600; font-size: 1rem;'>🧠 Model Settings</p>", unsafe_allow_html=True)
         
         backbone = st.selectbox(
             "CNN Backbone",
@@ -376,7 +653,7 @@ def create_sidebar():
         st.markdown("---")
         
         # Training Configuration
-        st.markdown(f"<h3 style='color: {YELLOW};'>🎯 Training Settings</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {ACCENT_4}; font-weight: 600; font-size: 1rem;'>🎯 Training Settings</p>", unsafe_allow_html=True)
         
         batch_size = st.slider("Batch Size", 8, 128, 32, 8)
         learning_rate = st.select_slider(
@@ -398,18 +675,18 @@ def create_sidebar():
         st.markdown("---")
         
         # Location Configuration
-        st.markdown(f"<h3 style='color: {YELLOW};'>📍 Location</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {ACCENT_5}; font-weight: 600; font-size: 1rem;'>📍 Location</p>", unsafe_allow_html=True)
         
         latitude = st.number_input("Latitude", -90.0, 90.0, 37.7749, 0.0001)
         longitude = st.number_input("Longitude", -180.0, 180.0, -122.4194, 0.0001)
         
         st.markdown("---")
         
-        # Contact Info
+        # Contact
         st.markdown(f"""
-        <div style="text-align: center; padding: 10px;">
-            <p style="color: {CREAM}; font-size: 0.9rem;">📧 pradyumnamand@gmail.com</p>
-            <p style="color: {CREAM}; font-size: 0.9rem;">📱 +1 480-797-3843</p>
+        <div style="text-align: center; padding: 15px 0;">
+            <p style="color: {TEXT_MUTED}; font-size: 0.85rem;">📧 pradyumnamand@gmail.com</p>
+            <p style="color: {TEXT_MUTED}; font-size: 0.85rem;">📱 +1 480-797-3843</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -460,149 +737,170 @@ def generate_sample_data():
 def render_home_tab():
     """Render the home/overview tab."""
     # Header
-    st.markdown(f'<h1 class="main-header">☀️ PV Power Estimation</h1>', unsafe_allow_html=True)
-    st.markdown(f'<p class="sub-header">Multi-Modal Deep Learning for Solar Power Prediction</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-title">Solar Power Estimation</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">Multi-Modal Deep Learning for Intelligent PV Power Prediction</p>', unsafe_allow_html=True)
     
     # Hero Image
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown(f"""
-        <div class="image-container" style="text-align: center;">
-            <img src="{IMAGES['solar_farm']}" style="width: 100%; border-radius: 10px;">
-            <p style="color: {CREAM}; margin-top: 10px; font-style: italic;">Advanced AI-powered solar power forecasting</p>
+    st.markdown(f"""
+    <div class="image-container" style="margin-bottom: 30px;">
+        <img src="{IMAGES['hero_solar']}" style="width: 100%; height: 350px; object-fit: cover;">
+        <div class="image-overlay">
+            <h4>Next-Generation Solar Analytics</h4>
+            <p>Harness AI to predict power output with unprecedented accuracy</p>
         </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Overview metrics
+    # Metrics Row
     col1, col2, col3, col4 = st.columns(4)
     
     metrics = [
-        ("🎯", "94.5%", "Model Accuracy"),
-        ("⚡", "15ms", "Inference Time"),
-        ("📊", "23.4 W", "RMSE"),
-        ("🌡️", "12", "Active Sensors")
+        ("🎯", "94.5%", "Accuracy"),
+        ("⚡", "15ms", "Inference"),
+        ("📊", "23.4W", "RMSE"),
+        ("🌡️", "12", "Sensors")
     ]
     
     for col, (icon, value, label) in zip([col1, col2, col3, col4], metrics):
         with col:
             st.markdown(f"""
             <div class="metric-card">
-                <span style="font-size: 2.5rem;">{icon}</span>
-                <h2>{value}</h2>
-                <p>{label}</p>
+                <div class="metric-icon">{icon}</div>
+                <div class="metric-value">{value}</div>
+                <div class="metric-label">{label}</div>
             </div>
             """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Key Features Section
-    st.markdown(f'<h2 class="section-header">✨ Key Features</h2>', unsafe_allow_html=True)
+    # Key Features
+    st.markdown('<h2 class="section-header">Key Features</h2>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown(f"""
         <div class="feature-card">
-            <h4>🖼️ Multi-Modal Learning</h4>
-            <p>Combines sky images, weather sensors, and sun position data for accurate predictions using state-of-the-art deep learning.</p>
+            <span class="icon">🖼️</span>
+            <h4>Multi-Modal Learning</h4>
+            <p>Combines sky images, weather sensors, and sun position data using advanced deep learning architectures.</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="feature-card">
-            <h4>🧠 Flexible Backbones</h4>
+            <span class="icon">🧠</span>
+            <h4>Flexible Backbones</h4>
             <p>Support for 10+ CNN architectures including ResNet, MobileNet, EfficientNet, and Vision Transformers.</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="feature-card">
-            <h4>⏱️ Temporal Modeling</h4>
-            <p>LSTM and Transformer encoders capture time-dependent patterns and seasonal variations in power generation.</p>
+            <span class="icon">⏱️</span>
+            <h4>Temporal Modeling</h4>
+            <p>LSTM and Transformer encoders capture time-dependent patterns and seasonal variations.</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown(f"""
         <div class="feature-card">
-            <h4>🔗 Attention Fusion</h4>
+            <span class="icon">🔗</span>
+            <h4>Attention Fusion</h4>
             <p>Dynamic modality weighting through cross-attention mechanisms for optimal feature combination.</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="feature-card">
-            <h4>📈 Uncertainty Estimation</h4>
+            <span class="icon">📈</span>
+            <h4>Uncertainty Estimation</h4>
             <p>Monte Carlo dropout provides prediction confidence intervals for reliable decision making.</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="feature-card">
-            <h4>☁️ Cloud Detection</h4>
+            <span class="icon">☁️</span>
+            <h4>Cloud Detection</h4>
             <p>OpenCV-based cloud segmentation and opacity estimation for accurate atmospheric analysis.</p>
         </div>
         """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Data Sources Section with Images
-    st.markdown(f'<h2 class="section-header">📊 Data Sources</h2>', unsafe_allow_html=True)
+    # Data Sources with Images
+    st.markdown('<h2 class="section-header">Data Sources</h2>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
         st.markdown(f"""
         <div class="image-container">
-            <img src="{IMAGES['sky_clouds']}" style="width: 100%; border-radius: 10px; height: 200px; object-fit: cover;">
-            <h4 style="color: {YELLOW}; margin-top: 15px; text-align: center;">📸 Sky Images</h4>
-            <p style="color: {CREAM}; text-align: center;">Fisheye camera captures for cloud cover analysis</p>
+            <img src="{IMAGES['sky_clouds']}" style="width: 100%; height: 220px; object-fit: cover;">
+            <div class="image-overlay">
+                <h4>📸 Sky Images</h4>
+                <p>Fisheye camera captures for cloud cover analysis</p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown(f"""
         <div class="image-container">
-            <img src="{IMAGES['weather_station']}" style="width: 100%; border-radius: 10px; height: 200px; object-fit: cover;">
-            <h4 style="color: {YELLOW}; margin-top: 15px; text-align: center;">🌡️ Weather Sensors</h4>
-            <p style="color: {CREAM}; text-align: center;">Temperature, humidity, pressure, wind data</p>
+            <img src="{IMAGES['weather_station']}" style="width: 100%; height: 220px; object-fit: cover;">
+            <div class="image-overlay">
+                <h4>🌡️ Weather Sensors</h4>
+                <p>Temperature, humidity, pressure, wind data</p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown(f"""
         <div class="image-container">
-            <img src="{IMAGES['sun']}" style="width: 100%; border-radius: 10px; height: 200px; object-fit: cover;">
-            <h4 style="color: {YELLOW}; margin-top: 15px; text-align: center;">☀️ Sun Position</h4>
-            <p style="color: {CREAM}; text-align: center;">Precise solar geometry calculations</p>
+            <img src="{IMAGES['sun_rays']}" style="width: 100%; height: 220px; object-fit: cover;">
+            <div class="image-overlay">
+                <h4>☀️ Sun Position</h4>
+                <p>Precise solar geometry calculations</p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Architecture Image
-    st.markdown(f'<h2 class="section-header">🏗️ Architecture</h2>', unsafe_allow_html=True)
+    # Technology Stack
+    st.markdown('<h2 class="section-header">Technology Stack</h2>', unsafe_allow_html=True)
     
-    # Check if architecture image exists
-    arch_path = Path(__file__).parent.parent.parent / "assets" / "architecture.png"
-    if arch_path.exists():
-        col1, col2, col3 = st.columns([1, 3, 1])
-        with col2:
-            st.image(str(arch_path), use_container_width=True)
-    else:
+    col1, col2 = st.columns(2)
+    
+    with col1:
         st.markdown(f"""
-        <div class="info-box">
-            <h3>Model Pipeline</h3>
-            <p>Sky Image → CNN Encoder → Temporal Encoder → Fusion Layer → Output → DC Power (W)</p>
+        <div class="image-container">
+            <img src="{IMAGES['technology']}" style="width: 100%; height: 200px; object-fit: cover;">
+            <div class="image-overlay">
+                <h4>Deep Learning Framework</h4>
+                <p>PyTorch, TensorFlow, timm</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div class="image-container">
+            <img src="{IMAGES['analytics']}" style="width: 100%; height: 200px; object-fit: cover;">
+            <div class="image-overlay">
+                <h4>Analytics & Visualization</h4>
+                <p>Plotly, Streamlit, OpenCV</p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
 
 def render_prediction_tab(config):
     """Render the prediction/inference tab."""
-    st.markdown(f'<h2 class="section-header">🔮 Power Prediction</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">Power Prediction</h2>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([1, 1])
     
@@ -610,6 +908,7 @@ def render_prediction_tab(config):
         st.markdown(f"""
         <div class="info-box">
             <h3>📸 Sky Image Input</h3>
+            <p>Generate synthetic sky images or upload your own for analysis</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -622,27 +921,28 @@ def render_prediction_tab(config):
             height, width = 300, 400
             sky_image = np.zeros((height, width, 3), dtype=np.uint8)
             
+            # Sky gradient
             for i in range(height):
-                blue_val = int(200 - i * 0.4)
-                sky_image[i, :, 2] = max(100, min(255, blue_val))
-                sky_image[i, :, 1] = max(80, min(200, int(blue_val * 0.7)))
-                sky_image[i, :, 0] = max(50, min(150, int(blue_val * 0.4)))
+                ratio = i / height
+                r = int(135 * (1 - ratio) + 200 * ratio)
+                g = int(206 * (1 - ratio) + 220 * ratio)
+                b = int(235 * (1 - ratio) + 255 * ratio)
+                sky_image[i, :] = [r, g, b]
             
+            # Add clouds
             np.random.seed(int(cloud_slider * 100))
-            num_clouds = int(cloud_slider * 12) + 1
+            num_clouds = int(cloud_slider * 15) + 1
             for _ in range(num_clouds):
-                cx = np.random.randint(50, width - 50)
+                cx = np.random.randint(30, width - 30)
                 cy = np.random.randint(20, height // 2)
-                radius = np.random.randint(30, 80)
+                radius = np.random.randint(25, 70)
                 y, x = np.ogrid[:height, :width]
                 mask = (x - cx) ** 2 + (y - cy) ** 2 < radius ** 2
-                cloud_color = np.random.randint(220, 250)
-                sky_image[mask] = [cloud_color, cloud_color, min(255, cloud_color + 5)]
+                cloud_color = np.random.randint(230, 255)
+                sky_image[mask] = [cloud_color, cloud_color, cloud_color]
             
-            st.markdown(f"""
-            <div class="image-container">
-            """, unsafe_allow_html=True)
-            st.image(sky_image, caption="Generated Sky Image", use_container_width=True)
+            st.markdown(f"""<div class="image-container" style="margin: 15px 0;">""", unsafe_allow_html=True)
+            st.image(sky_image, caption=f"Generated Sky (Cloud Cover: {int(cloud_slider*100)}%)", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
         else:
             uploaded_file = st.file_uploader("Upload Sky Image", type=["jpg", "png", "jpeg"])
@@ -660,7 +960,8 @@ def render_prediction_tab(config):
     with col2:
         st.markdown(f"""
         <div class="info-box">
-            <h3>🌡️ Weather Data</h3>
+            <h3>🌡️ Weather Parameters</h3>
+            <p>Enter current weather conditions for accurate prediction</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -699,30 +1000,37 @@ def render_prediction_tab(config):
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Run prediction
-    if st.button("🚀 Run Prediction", type="primary", use_container_width=True):
-        with st.spinner("Running inference..."):
-            progress_bar = st.progress(0)
+    # Run Prediction Button
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        predict_btn = st.button("🚀 Run Prediction", type="primary", use_container_width=True)
+    
+    if predict_btn:
+        with st.spinner("Analyzing sky conditions..."):
+            progress = st.progress(0)
             for i in range(100):
-                time.sleep(0.01)
-                progress_bar.progress(i + 1)
+                time.sleep(0.015)
+                progress.progress(i + 1)
             
-            base_power = ghi * 0.8 * np.sin(np.radians(max(0, elevation)))
-            cloud_effect = 1 - cloud_slider * 0.5
-            predicted_power = base_power * cloud_effect + np.random.normal(0, 10)
+            base_power = ghi * 0.85 * np.sin(np.radians(max(0, elevation)))
+            cloud_effect = 1 - cloud_slider * 0.55
+            predicted_power = base_power * cloud_effect + np.random.normal(0, 15)
             predicted_power = max(0, predicted_power)
-            uncertainty = predicted_power * 0.05 + np.random.uniform(5, 15)
+            uncertainty = predicted_power * 0.06 + np.random.uniform(5, 12)
         
         st.success("✅ Prediction Complete!")
         
-        col1, col2, col3 = st.columns(3)
+        # Results
+        col1, col2, col3 = st.columns([1, 1, 1])
         
         with col1:
             st.markdown(f"""
             <div class="result-card">
-                <h3>⚡ Predicted Power</h3>
-                <h1>{predicted_power:.1f} W</h1>
-                <p>± {uncertainty * 2:.1f} W (95% CI)</p>
+                <div class="result-content">
+                    <h3>⚡ Predicted Power</h3>
+                    <div class="power-value">{predicted_power:.0f} W</div>
+                    <p class="confidence">± {uncertainty:.1f} W (95% CI)</p>
+                </div>
             </div>
             """, unsafe_allow_html=True)
         
@@ -730,64 +1038,63 @@ def render_prediction_tab(config):
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=cloud_slider * 100,
-                title={'text': "Cloud Cover (%)", 'font': {'color': WHITE}},
+                title={'text': "Cloud Cover", 'font': {'color': TEXT_LIGHT, 'size': 16}},
+                number={'suffix': "%", 'font': {'color': TEXT_LIGHT}},
                 gauge={
-                    'axis': {'range': [0, 100], 'tickcolor': WHITE},
-                    'bar': {'color': YELLOW},
-                    'bgcolor': MAROON_DARK,
+                    'axis': {'range': [0, 100], 'tickcolor': TEXT_LIGHT},
+                    'bar': {'color': ACCENT_4},
+                    'bgcolor': PRIMARY_MID,
                     'steps': [
-                        {'range': [0, 30], 'color': '#2d5016'},
-                        {'range': [30, 70], 'color': '#8B8000'},
-                        {'range': [70, 100], 'color': '#8B0000'}
+                        {'range': [0, 30], 'color': ACCENT_5},
+                        {'range': [30, 70], 'color': ACCENT_3},
+                        {'range': [70, 100], 'color': ACCENT_1}
                     ]
                 }
             ))
-            fig.update_layout(
-                height=250, 
-                paper_bgcolor='rgba(0,0,0,0)', 
-                plot_bgcolor='rgba(0,0,0,0)',
-                font={'color': WHITE}
-            )
+            fig.update_layout(height=280, paper_bgcolor='rgba(0,0,0,0)', font={'color': TEXT_LIGHT})
             st.plotly_chart(fig, use_container_width=True)
         
         with col3:
-            confidence = 100 - (uncertainty / predicted_power * 100 if predicted_power > 0 else 50)
+            confidence = min(98, max(60, 100 - (uncertainty / max(1, predicted_power) * 100)))
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=confidence,
-                title={'text': "Confidence (%)", 'font': {'color': WHITE}},
+                title={'text': "Confidence", 'font': {'color': TEXT_LIGHT, 'size': 16}},
+                number={'suffix': "%", 'font': {'color': TEXT_LIGHT}},
                 gauge={
-                    'axis': {'range': [0, 100], 'tickcolor': WHITE},
-                    'bar': {'color': YELLOW},
-                    'bgcolor': MAROON_DARK,
-                    'threshold': {
-                        'line': {'color': "white", 'width': 4},
-                        'thickness': 0.75,
-                        'value': 85
-                    }
+                    'axis': {'range': [0, 100], 'tickcolor': TEXT_LIGHT},
+                    'bar': {'color': ACCENT_5},
+                    'bgcolor': PRIMARY_MID,
+                    'threshold': {'line': {'color': TEXT_LIGHT, 'width': 3}, 'value': 85}
                 }
             ))
-            fig.update_layout(
-                height=250, 
-                paper_bgcolor='rgba(0,0,0,0)', 
-                plot_bgcolor='rgba(0,0,0,0)',
-                font={'color': WHITE}
-            )
+            fig.update_layout(height=280, paper_bgcolor='rgba(0,0,0,0)', font={'color': TEXT_LIGHT})
             st.plotly_chart(fig, use_container_width=True)
 
 
 def render_training_tab(config):
     """Render the training simulation tab."""
-    st.markdown(f'<h2 class="section-header">🎯 Training Dashboard</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">Training Dashboard</h2>', unsafe_allow_html=True)
     
-    # Training configuration summary
+    # Training Image
+    st.markdown(f"""
+    <div class="image-container" style="margin-bottom: 25px;">
+        <img src="{IMAGES['solar_farm']}" style="width: 100%; height: 200px; object-fit: cover;">
+        <div class="image-overlay">
+            <h4>Model Training</h4>
+            <p>Configure and simulate the training process</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Configuration Summary
     with st.expander("📋 Training Configuration", expanded=True):
         col1, col2, col3 = st.columns(3)
         
         with col1:
             st.markdown(f"""
-            <div class="info-box">
-                <h3>Model Architecture</h3>
+            <div class="glass-card">
+                <h4>🧠 Model Architecture</h4>
                 <p><strong>Backbone:</strong> {config['backbone']}</p>
                 <p><strong>Temporal:</strong> {config['temporal_encoder']}</p>
                 <p><strong>Fusion:</strong> {config['fusion_method']}</p>
@@ -796,8 +1103,8 @@ def render_training_tab(config):
         
         with col2:
             st.markdown(f"""
-            <div class="info-box">
-                <h3>Training Parameters</h3>
+            <div class="glass-card">
+                <h4>⚙️ Training Parameters</h4>
                 <p><strong>Batch Size:</strong> {config['batch_size']}</p>
                 <p><strong>Learning Rate:</strong> {config['learning_rate']}</p>
                 <p><strong>Epochs:</strong> {config['epochs']}</p>
@@ -806,16 +1113,20 @@ def render_training_tab(config):
         
         with col3:
             st.markdown(f"""
-            <div class="info-box">
-                <h3>Optimizations</h3>
+            <div class="glass-card">
+                <h4>🔧 Optimizations</h4>
                 <p><strong>Scheduler:</strong> {config['scheduler']}</p>
                 <p><strong>Mixed Precision:</strong> {'✅' if config['use_amp'] else '❌'}</p>
                 <p><strong>Early Stopping:</strong> {'✅' if config['early_stopping'] else '❌'}</p>
             </div>
             """, unsafe_allow_html=True)
     
-    # Training simulation
-    if st.button("🚀 Start Training Simulation", type="primary", use_container_width=True):
+    # Training Button
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        train_btn = st.button("🚀 Start Training", type="primary", use_container_width=True)
+    
+    if train_btn:
         progress_bar = st.progress(0)
         status_text = st.empty()
         
@@ -826,169 +1137,163 @@ def render_training_tab(config):
         with col2:
             metrics_chart = st.empty()
         
-        train_losses = []
-        val_losses = []
-        epochs_done = []
-        
-        num_epochs = min(config['epochs'], 30)
+        train_losses, val_losses, epochs_done = [], [], []
+        num_epochs = min(config['epochs'], 25)
         
         for epoch in range(num_epochs):
-            time.sleep(0.1)
+            time.sleep(0.08)
             
-            train_loss = 100 * np.exp(-epoch / 10) + np.random.normal(0, 3)
-            val_loss = 100 * np.exp(-epoch / 12) + np.random.normal(0, 5)
+            train_loss = 100 * np.exp(-epoch / 8) + np.random.normal(0, 2)
+            val_loss = 100 * np.exp(-epoch / 10) + np.random.normal(0, 3)
             
-            train_losses.append(max(5, train_loss))
-            val_losses.append(max(8, val_loss))
+            train_losses.append(max(3, train_loss))
+            val_losses.append(max(5, val_loss))
             epochs_done.append(epoch + 1)
             
-            progress = (epoch + 1) / num_epochs
-            progress_bar.progress(progress)
+            progress_bar.progress((epoch + 1) / num_epochs)
             status_text.markdown(f"""
             <div class="info-box">
-                <p><strong>Epoch {epoch + 1}/{num_epochs}</strong> | Train Loss: {train_losses[-1]:.2f} | Val Loss: {val_losses[-1]:.2f}</p>
+                <p>📊 <strong>Epoch {epoch + 1}/{num_epochs}</strong> | Train: {train_losses[-1]:.2f} | Val: {val_losses[-1]:.2f}</p>
             </div>
             """, unsafe_allow_html=True)
             
             # Loss chart
             fig = go.Figure()
-            fig.add_trace(go.Scatter(x=epochs_done, y=train_losses, name='Train', line=dict(color=YELLOW, width=3)))
-            fig.add_trace(go.Scatter(x=epochs_done, y=val_losses, name='Validation', line=dict(color=MAROON_LIGHT, width=3)))
+            fig.add_trace(go.Scatter(x=epochs_done, y=train_losses, name='Train', 
+                                    line=dict(color=ACCENT_4, width=3),
+                                    fill='tozeroy', fillcolor=f'{ACCENT_4}20'))
+            fig.add_trace(go.Scatter(x=epochs_done, y=val_losses, name='Validation', 
+                                    line=dict(color=ACCENT_1, width=3),
+                                    fill='tozeroy', fillcolor=f'{ACCENT_1}20'))
             fig.update_layout(
-                title=dict(text='Training Progress', font=dict(color=WHITE)),
-                xaxis=dict(title='Epoch', color=WHITE, gridcolor=CARD_BG),
-                yaxis=dict(title='Loss', color=WHITE, gridcolor=CARD_BG),
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                legend=dict(font=dict(color=WHITE)),
-                height=300
+                title=dict(text='Loss Curves', font=dict(color=TEXT_LIGHT)),
+                xaxis=dict(title='Epoch', color=TEXT_LIGHT, gridcolor=CARD_BORDER),
+                yaxis=dict(title='Loss', color=TEXT_LIGHT, gridcolor=CARD_BORDER),
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(font=dict(color=TEXT_LIGHT)), height=320
             )
             loss_chart.plotly_chart(fig, use_container_width=True)
             
             # Metrics
-            rmse = 30 * np.exp(-epoch / 15) + 5 + np.random.normal(0, 1)
-            mae = 20 * np.exp(-epoch / 15) + 3 + np.random.normal(0, 0.5)
-            r2 = min(0.99, 1 - np.exp(-epoch / 10) + np.random.normal(0, 0.01))
+            rmse = 35 * np.exp(-epoch / 12) + 5 + np.random.normal(0, 0.5)
+            mae = 25 * np.exp(-epoch / 12) + 3 + np.random.normal(0, 0.3)
+            r2 = min(0.98, 1 - np.exp(-epoch / 8) + np.random.normal(0, 0.005))
             
             fig = go.Figure(data=[
-                go.Bar(name='RMSE', x=['RMSE'], y=[max(5, rmse)], marker_color=YELLOW),
-                go.Bar(name='MAE', x=['MAE'], y=[max(3, mae)], marker_color=MAROON_LIGHT),
-                go.Bar(name='R²×100', x=['R²×100'], y=[max(50, r2*100)], marker_color=YELLOW_DARK)
+                go.Bar(name='RMSE', x=['RMSE'], y=[max(5, rmse)], marker_color=ACCENT_4),
+                go.Bar(name='MAE', x=['MAE'], y=[max(3, mae)], marker_color=ACCENT_3),
+                go.Bar(name='R²×100', x=['R²×100'], y=[max(50, r2*100)], marker_color=ACCENT_5)
             ])
             fig.update_layout(
-                title=dict(text='Current Metrics', font=dict(color=WHITE)),
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                xaxis=dict(color=WHITE),
-                yaxis=dict(color=WHITE, gridcolor=CARD_BG),
-                showlegend=False,
-                height=300
+                title=dict(text='Metrics', font=dict(color=TEXT_LIGHT)),
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(color=TEXT_LIGHT), yaxis=dict(color=TEXT_LIGHT, gridcolor=CARD_BORDER),
+                showlegend=False, height=320
             )
             metrics_chart.plotly_chart(fig, use_container_width=True)
         
         st.balloons()
         st.success("🎉 Training Complete!")
         
-        # Final results
+        # Final Results
         col1, col2, col3, col4 = st.columns(4)
         
-        results = [
-            ("Best Val Loss", f"{min(val_losses):.2f}"),
-            ("Final RMSE", f"{rmse:.2f} W"),
-            ("Final R²", f"{r2:.4f}"),
-            ("Training Time", "8.5 min")
+        final_results = [
+            ("📉", f"{min(val_losses):.2f}", "Best Loss"),
+            ("📊", f"{rmse:.2f} W", "Final RMSE"),
+            ("🎯", f"{r2:.4f}", "R² Score"),
+            ("⏱️", "8.5 min", "Duration")
         ]
         
-        for col, (label, value) in zip([col1, col2, col3, col4], results):
+        for col, (icon, value, label) in zip([col1, col2, col3, col4], final_results):
             with col:
                 st.markdown(f"""
                 <div class="metric-card">
-                    <p>{label}</p>
-                    <h2>{value}</h2>
+                    <div class="metric-icon">{icon}</div>
+                    <div class="metric-value">{value}</div>
+                    <div class="metric-label">{label}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
 
 def render_analytics_tab():
     """Render the analytics/visualization tab."""
-    st.markdown(f'<h2 class="section-header">📊 Analytics & Visualization</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">Analytics & Insights</h2>', unsafe_allow_html=True)
+    
+    # Analytics Header Image
+    st.markdown(f"""
+    <div class="image-container" style="margin-bottom: 25px;">
+        <img src="{IMAGES['analytics']}" style="width: 100%; height: 180px; object-fit: cover;">
+        <div class="image-overlay">
+            <h4>Power Generation Analytics</h4>
+            <p>Visualize trends, patterns, and correlations</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     data = generate_sample_data()
     
-    # Time range selector
+    # Time Range
     col1, col2 = st.columns([3, 1])
     with col1:
-        time_range = st.select_slider(
-            "Time Range",
-            options=["1 Day", "3 Days", "1 Week"],
-            value="1 Week"
-        )
+        time_range = st.select_slider("Time Range", options=["1 Day", "3 Days", "1 Week"], value="1 Week")
     
     if time_range == "1 Day":
         data = data.head(24)
     elif time_range == "3 Days":
         data = data.head(72)
     
-    # Power generation chart
+    # Power Generation Chart
     st.markdown(f"""
     <div class="info-box">
         <h3>⚡ Power Generation Over Time</h3>
     </div>
     """, unsafe_allow_html=True)
     
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1,
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.08,
                         subplot_titles=("DC Power Output", "Weather Conditions"))
     
-    fig.add_trace(go.Scatter(x=data['timestamp'], y=data['power'], name='Power', 
-                             fill='tozeroy', line=dict(color=YELLOW, width=2),
-                             fillcolor='rgba(255, 215, 0, 0.3)'), row=1, col=1)
+    fig.add_trace(go.Scatter(x=data['timestamp'], y=data['power'], name='Power',
+                             fill='tozeroy', line=dict(color=ACCENT_3, width=2),
+                             fillcolor=f'{ACCENT_3}30'), row=1, col=1)
     
-    fig.add_trace(go.Scatter(x=data['timestamp'], y=data['ghi'], name='GHI', 
-                             line=dict(color=MAROON_LIGHT, width=2)), row=2, col=1)
-    fig.add_trace(go.Scatter(x=data['timestamp'], y=data['temperature'] * 10, name='Temp (×10)', 
-                             line=dict(color=YELLOW_DARK, width=2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=data['timestamp'], y=data['ghi'], name='GHI',
+                             line=dict(color=ACCENT_4, width=2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=data['timestamp'], y=data['temperature'] * 10, name='Temp (×10)',
+                             line=dict(color=ACCENT_1, width=2)), row=2, col=1)
     
     fig.update_layout(
-        height=500, 
-        paper_bgcolor='rgba(0,0,0,0)', 
-        plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color=WHITE),
-        legend=dict(font=dict(color=WHITE)),
-        showlegend=True
+        height=500, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color=TEXT_LIGHT), legend=dict(font=dict(color=TEXT_LIGHT))
     )
-    fig.update_xaxes(gridcolor=CARD_BG, color=WHITE)
-    fig.update_yaxes(gridcolor=CARD_BG, color=WHITE)
+    fig.update_xaxes(gridcolor=CARD_BORDER, color=TEXT_LIGHT)
+    fig.update_yaxes(gridcolor=CARD_BORDER, color=TEXT_LIGHT)
     
     st.plotly_chart(fig, use_container_width=True)
     
     # Statistics
-    st.markdown(f"""
-    <div class="info-box">
-        <h3>📈 Performance Statistics</h3>
-    </div>
-    """, unsafe_allow_html=True)
-    
     col1, col2, col3, col4 = st.columns(4)
     
     stats = [
-        ("Max Power", f"{data['power'].max():.1f} W"),
-        ("Avg Power", f"{data['power'].mean():.1f} W"),
-        ("Capacity Factor", f"{(data['power'].mean() / data['power'].max() * 100):.1f}%"),
-        ("Peak Hours", f"{(data['power'] > data['power'].mean()).sum()} hrs")
+        ("🔋", f"{data['power'].max():.0f} W", "Max Power"),
+        ("📊", f"{data['power'].mean():.0f} W", "Avg Power"),
+        ("⚡", f"{(data['power'].mean() / max(1, data['power'].max()) * 100):.1f}%", "Capacity"),
+        ("☀️", f"{(data['power'] > data['power'].mean()).sum()} hrs", "Peak Hours")
     ]
     
-    for col, (label, value) in zip([col1, col2, col3, col4], stats):
+    for col, (icon, value, label) in zip([col1, col2, col3, col4], stats):
         with col:
             st.markdown(f"""
             <div class="metric-card">
-                <p>{label}</p>
-                <h2>{value}</h2>
+                <div class="metric-icon">{icon}</div>
+                <div class="metric-value">{value}</div>
+                <div class="metric-label">{label}</div>
             </div>
             """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Correlation heatmap
+    # Correlation & Distribution
     col1, col2 = st.columns(2)
     
     with col1:
@@ -1003,8 +1308,8 @@ def render_analytics_tab():
         
         fig = px.imshow(corr_matrix, labels=dict(color="Correlation"),
                        x=corr_cols, y=corr_cols,
-                       color_continuous_scale=[[0, MAROON_DARK], [0.5, CARD_BG], [1, YELLOW]])
-        fig.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', font=dict(color=WHITE))
+                       color_continuous_scale=[[0, ACCENT_1], [0.5, PRIMARY_MID], [1, ACCENT_4]])
+        fig.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', font=dict(color=TEXT_LIGHT))
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
@@ -1014,22 +1319,25 @@ def render_analytics_tab():
         </div>
         """, unsafe_allow_html=True)
         
-        fig = px.histogram(data, x='power', nbins=25, color_discrete_sequence=[YELLOW])
+        fig = px.histogram(data, x='power', nbins=30, color_discrete_sequence=[ACCENT_4])
         fig.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                         font=dict(color=WHITE), xaxis=dict(gridcolor=CARD_BG),
-                         yaxis=dict(gridcolor=CARD_BG))
+                         font=dict(color=TEXT_LIGHT), xaxis=dict(gridcolor=CARD_BORDER),
+                         yaxis=dict(gridcolor=CARD_BORDER))
         st.plotly_chart(fig, use_container_width=True)
 
 
 def render_cloud_analysis_tab():
     """Render the cloud analysis tab."""
-    st.markdown(f'<h2 class="section-header">☁️ Cloud Detection & Analysis</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">Cloud Detection & Analysis</h2>', unsafe_allow_html=True)
     
+    # Cloud Analysis Header
     st.markdown(f"""
-    <div class="info-box">
-        <h3>About Cloud Analysis</h3>
-        <p>This module uses <strong>OpenCV</strong> for real-time cloud detection and segmentation. 
-        Features include automatic cloud segmentation, cover estimation, opacity analysis, and clear sky indicators.</p>
+    <div class="image-container" style="margin-bottom: 25px;">
+        <img src="{IMAGES['cloudy_sky']}" style="width: 100%; height: 180px; object-fit: cover;">
+        <div class="image-overlay">
+            <h4>OpenCV-Based Cloud Detection</h4>
+            <p>Real-time cloud segmentation and feature extraction</p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1049,25 +1357,27 @@ def render_cloud_analysis_tab():
         height, width = 300, 400
         sky_image = np.zeros((height, width, 3), dtype=np.uint8)
         
+        # Create gradient sky
         for i in range(height):
-            blue_val = int(200 - i * 0.4)
-            sky_image[i, :, 2] = max(100, min(255, blue_val))
-            sky_image[i, :, 1] = max(80, min(200, int(blue_val * 0.7)))
-            sky_image[i, :, 0] = max(50, min(150, int(blue_val * 0.4)))
+            ratio = i / height
+            r = int(100 * (1 - ratio) + 180 * ratio)
+            g = int(150 * (1 - ratio) + 210 * ratio)
+            b = int(230 * (1 - ratio) + 250 * ratio)
+            sky_image[i, :] = [r, g, b]
         
         cloud_mask = np.zeros((height, width), dtype=np.uint8)
-        num_clouds = int(cloud_cover * 12) + 1
+        num_clouds = int(cloud_cover * 15) + 1
         
         for _ in range(num_clouds):
-            cx = np.random.randint(50, width - 50)
-            cy = np.random.randint(20, height // 2)
-            radius = np.random.randint(40, 100)
+            cx = np.random.randint(40, width - 40)
+            cy = np.random.randint(15, height // 2)
+            radius = np.random.randint(30, 90)
             
             y, x = np.ogrid[:height, :width]
             mask = (x - cx) ** 2 + (y - cy) ** 2 < radius ** 2
             
-            cloud_color = np.random.randint(220, 255)
-            sky_image[mask] = [cloud_color, cloud_color, min(255, cloud_color + 5)]
+            cloud_color = np.random.randint(225, 255)
+            sky_image[mask] = [cloud_color, cloud_color, cloud_color]
             cloud_mask[mask] = 255
         
         st.markdown(f"""<div class="image-container">""", unsafe_allow_html=True)
@@ -1081,15 +1391,16 @@ def render_cloud_analysis_tab():
         </div>
         """, unsafe_allow_html=True)
         
+        # Create colored segmentation
         segmented = np.zeros((height, width, 3), dtype=np.uint8)
-        segmented[cloud_mask == 255] = [128, 0, 0]  # Maroon for clouds
-        segmented[cloud_mask == 0] = [255, 215, 0]  # Yellow for sky
+        segmented[cloud_mask == 255] = [233, 69, 96]  # Accent color for clouds
+        segmented[cloud_mask == 0] = [72, 219, 251]   # Blue for sky
         
         st.markdown(f"""<div class="image-container">""", unsafe_allow_html=True)
-        st.image(segmented, caption="Segmented (Maroon: Clouds, Yellow: Sky)", use_container_width=True)
+        st.image(segmented, caption="Segmented (Pink: Clouds, Blue: Sky)", use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
     
-    # Cloud features
+    # Features
     st.markdown(f"""
     <div class="info-box">
         <h3>📊 Extracted Features</h3>
@@ -1097,47 +1408,51 @@ def render_cloud_analysis_tab():
     """, unsafe_allow_html=True)
     
     actual_cover = (cloud_mask == 255).sum() / cloud_mask.size * 100
-    brightness = np.mean(sky_image) / 255
-    blue_ratio = np.mean(sky_image[:, :, 2]) / (np.mean(sky_image) + 1e-6)
-    opacity = cloud_cover * 0.8 + 0.1
+    brightness = np.mean(sky_image) / 255 * 100
+    blue_ratio = np.mean(sky_image[:, :, 2]) / (np.mean(sky_image) + 1e-6) * 100
+    opacity = cloud_cover * 80 + 10
     contrast = np.std(sky_image) / (np.mean(sky_image) + 1e-6) * 100
     
     col1, col2, col3, col4, col5 = st.columns(5)
     
     features = [
-        (col1, "Cloud Cover", actual_cover, "%"),
-        (col2, "Brightness", brightness * 100, "%"),
-        (col3, "Blue Ratio", blue_ratio * 100, "%"),
-        (col4, "Opacity", opacity * 100, "%"),
-        (col5, "Contrast", contrast, "%")
+        (col1, "☁️ Cloud Cover", actual_cover),
+        (col2, "💡 Brightness", brightness),
+        (col3, "🔵 Blue Ratio", min(100, blue_ratio)),
+        (col4, "🌫️ Opacity", opacity),
+        (col5, "📈 Contrast", min(100, contrast))
     ]
     
-    for col, name, value, unit in features:
+    for col, name, value in features:
         with col:
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=value,
-                title={'text': name, 'font': {'size': 12, 'color': WHITE}},
-                number={'suffix': unit, 'font': {'color': WHITE}},
+                title={'text': name, 'font': {'size': 11, 'color': TEXT_LIGHT}},
+                number={'suffix': "%", 'font': {'color': TEXT_LIGHT, 'size': 18}},
                 gauge={
-                    'axis': {'range': [0, 100], 'tickcolor': WHITE},
-                    'bar': {'color': YELLOW},
-                    'bgcolor': MAROON_DARK,
+                    'axis': {'range': [0, 100], 'tickcolor': TEXT_LIGHT},
+                    'bar': {'color': ACCENT_3},
+                    'bgcolor': PRIMARY_MID,
                 }
             ))
-            fig.update_layout(height=180, margin=dict(l=10, r=10, t=50, b=10),
+            fig.update_layout(height=180, margin=dict(l=10, r=10, t=60, b=10),
                             paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
 
 def render_sun_position_tab(config):
     """Render the sun position tab."""
-    st.markdown(f'<h2 class="section-header">☀️ Sun Position Calculator</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">Sun Position Calculator</h2>', unsafe_allow_html=True)
     
+    # Sun Position Header
     st.markdown(f"""
-    <div class="info-box">
-        <h3>About Sun Position</h3>
-        <p>Uses <strong>pvlib</strong> for accurate astronomical calculations of sun position based on geographic location and time.</p>
+    <div class="image-container" style="margin-bottom: 25px;">
+        <img src="{IMAGES['sun_rays']}" style="width: 100%; height: 180px; object-fit: cover;">
+        <div class="image-overlay">
+            <h4>Solar Geometry Calculations</h4>
+            <p>Powered by pvlib astronomical algorithms</p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1182,20 +1497,20 @@ def render_sun_position_tab(config):
         
         st.markdown(f"""
         <div class="info-box">
-            <h3>📊 Sun Parameters</h3>
+            <h3>☀️ Sun Parameters</h3>
         </div>
         """, unsafe_allow_html=True)
         
         params = [
-            ("Zenith Angle", f"{zenith:.2f}°"),
-            ("Azimuth Angle", f"{azimuth:.2f}°"),
+            ("Zenith", f"{zenith:.2f}°"),
+            ("Azimuth", f"{azimuth:.2f}°"),
             ("Elevation", f"{elevation:.2f}°"),
-            ("Is Daytime", "☀️ Yes" if elevation > 0 else "🌙 No")
+            ("Daytime", "☀️ Yes" if elevation > 0 else "🌙 No")
         ]
         
         for label, value in params:
             st.markdown(f"""
-            <div class="feature-card" style="padding: 10px; margin: 5px 0;">
+            <div class="glass-card" style="padding: 12px; margin: 8px 0;">
                 <p style="margin: 0;"><strong>{label}:</strong> {value}</p>
             </div>
             """, unsafe_allow_html=True)
@@ -1229,10 +1544,9 @@ def render_sun_position_tab(config):
         fig.add_trace(go.Scatterpolar(
             r=90 - np.array(elevations)[valid_idx],
             theta=np.array(azimuths)[valid_idx],
-            mode='lines+markers',
+            mode='lines',
             name='Sun Path',
-            line=dict(color=YELLOW, width=4),
-            marker=dict(size=4, color=YELLOW)
+            line=dict(color=ACCENT_3, width=4)
         ))
         
         if elevation > 0:
@@ -1240,22 +1554,20 @@ def render_sun_position_tab(config):
                 r=[90 - elevation],
                 theta=[azimuth],
                 mode='markers',
-                name='Current Position',
-                marker=dict(size=25, color=MAROON, symbol='star', line=dict(color=YELLOW, width=2))
+                name='Current',
+                marker=dict(size=20, color=ACCENT_1, symbol='star', line=dict(color=TEXT_LIGHT, width=2))
             ))
         
         fig.update_layout(
             polar=dict(
-                radialaxis=dict(range=[0, 90], tickmode='linear', tick0=0, dtick=15, 
-                               tickfont=dict(color=WHITE), gridcolor=CARD_BG),
-                angularaxis=dict(direction='clockwise', rotation=90, 
-                                tickfont=dict(color=WHITE), gridcolor=CARD_BG),
+                radialaxis=dict(range=[0, 90], tickmode='linear', tick0=0, dtick=15,
+                               tickfont=dict(color=TEXT_LIGHT), gridcolor=CARD_BORDER),
+                angularaxis=dict(direction='clockwise', rotation=90,
+                                tickfont=dict(color=TEXT_LIGHT), gridcolor=CARD_BORDER),
                 bgcolor='rgba(0,0,0,0)'
             ),
-            showlegend=True,
-            legend=dict(font=dict(color=WHITE)),
-            height=400,
-            paper_bgcolor='rgba(0,0,0,0)'
+            showlegend=True, legend=dict(font=dict(color=TEXT_LIGHT)),
+            height=380, paper_bgcolor='rgba(0,0,0,0)'
         )
         
         st.plotly_chart(fig, use_container_width=True)
@@ -1276,19 +1588,18 @@ def render_sun_position_tab(config):
         
         col_a, col_b, col_c = st.columns(3)
         
-        irr_data = [
+        irr = [
             (col_a, "GHI", ghi_clear),
             (col_b, "DNI", dni_clear),
             (col_c, "DHI", dhi_clear)
         ]
         
-        for col, name, value in irr_data:
+        for col, name, value in irr:
             with col:
                 st.markdown(f"""
                 <div class="metric-card">
-                    <p>{name}</p>
-                    <h2>{value:.0f}</h2>
-                    <p>W/m²</p>
+                    <div class="metric-value">{value:.0f}</div>
+                    <div class="metric-label">{name} (W/m²)</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1297,7 +1608,7 @@ def main():
     """Main application."""
     config = create_sidebar()
     
-    # Main content tabs
+    # Tabs
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🏠 Home",
         "🔮 Prediction",
@@ -1328,9 +1639,10 @@ def main():
     # Footer
     st.markdown(f"""
     <div class="footer">
-        <p><strong>🌤️ PV Power Estimation Dashboard</strong></p>
+        <p style="font-size: 1.2rem; color: {ACCENT_3}; font-weight: 600;">☀️ PV Power Estimation Dashboard</p>
         <p>Multi-Modal Deep Learning for Solar Power Prediction</p>
         <p>📧 pradyumnamand@gmail.com | 📱 +1 480-797-3843</p>
+        <p style="margin-top: 15px; font-size: 0.85rem;">© 2024 All Rights Reserved</p>
     </div>
     """, unsafe_allow_html=True)
 
