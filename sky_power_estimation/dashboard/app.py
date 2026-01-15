@@ -1161,10 +1161,10 @@ def render_training_tab(config):
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=epochs_done, y=train_losses, name='Train', 
                                     line=dict(color=ACCENT_4, width=3),
-                                    fill='tozeroy', fillcolor=f'{ACCENT_4}20'))
+                                    fill='tozeroy', fillcolor='rgba(72, 219, 251, 0.2)'))
             fig.add_trace(go.Scatter(x=epochs_done, y=val_losses, name='Validation', 
                                     line=dict(color=ACCENT_1, width=3),
-                                    fill='tozeroy', fillcolor=f'{ACCENT_1}20'))
+                                    fill='tozeroy', fillcolor='rgba(233, 69, 96, 0.2)'))
             fig.update_layout(
                 title=dict(text='Loss Curves', font=dict(color=TEXT_LIGHT)),
                 xaxis=dict(title='Epoch', color=TEXT_LIGHT, gridcolor=CARD_BORDER),
@@ -1255,7 +1255,7 @@ def render_analytics_tab():
     
     fig.add_trace(go.Scatter(x=data['timestamp'], y=data['power'], name='Power',
                              fill='tozeroy', line=dict(color=ACCENT_3, width=2),
-                             fillcolor=f'{ACCENT_3}30'), row=1, col=1)
+                             fillcolor='rgba(254, 202, 87, 0.3)'), row=1, col=1)
     
     fig.add_trace(go.Scatter(x=data['timestamp'], y=data['ghi'], name='GHI',
                              line=dict(color=ACCENT_4, width=2)), row=2, col=1)
