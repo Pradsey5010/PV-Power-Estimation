@@ -1,13 +1,6 @@
 # PV Power Estimation - Sky Image & Weather-Based DC Power Prediction
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python Version">
-  <img src="https://img.shields.io/badge/PyTorch-2.0+-orange.svg" alt="PyTorch">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/Status-Active-brightgreen.svg" alt="Status">
-</p>
-
-<p align="center">
   <b>A Multi-Modal Deep Learning System for Predicting Solar PV DC Power Output</b>
 </p>
 
