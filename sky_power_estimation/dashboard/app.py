@@ -569,9 +569,25 @@ st.markdown(f"""
         animation: fadeInUp 0.6s ease-out;
     }}
     
-    /* Hide Streamlit Branding */
+    /* Hide Streamlit Branding & Deploy Button */
     #MainMenu {{visibility: hidden;}}
     footer {{visibility: hidden;}}
+    .stDeployButton {{display: none;}}
+    header {{visibility: hidden;}}
+    
+    /* Remove top padding/gap */
+    .block-container {{
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }}
+    
+    [data-testid="stHeader"] {{
+        display: none;
+    }}
+    
+    .stApp > header {{
+        display: none;
+    }}
     
     /* Custom Scrollbar */
     ::-webkit-scrollbar {{
