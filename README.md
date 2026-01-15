@@ -1,4 +1,4 @@
-# 🌤️ PV Power Estimation - Sky Image & Weather-Based DC Power Prediction
+# PV Power Estimation - Sky Image & Weather-Based DC Power Prediction
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python Version">
@@ -13,9 +13,9 @@
 
 ---
 
-## 🚀 Try It Online & Run Locally
+## Try It Online & Run Locally
 
-### 🖥️ Run on Your Local Computer (Easiest Method)
+### Run on Your Local Computer (Easiest Method)
 
 **Step 1: Download the project**
 ```bash
@@ -60,7 +60,7 @@ The Colab notebook lets you:
 
 ---
 
-### 🌐 Other Online Options
+### Other Online Options
 
 | Platform | Link | Best For |
 |----------|------|----------|
@@ -70,7 +70,7 @@ The Colab notebook lets you:
 
 ---
 
-### 📱 Quick Commands Reference
+### Quick Commands Reference
 
 ```bash
 # Clone and run (copy-paste this entire block)
@@ -123,7 +123,7 @@ This multi-modal approach significantly outperforms single-source prediction met
 
 ## How It Works
 
-### 1️⃣ Data Acquisition
+### 1 Data Acquisition
 ```
 ┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐
 │   Sky Camera    │   │ Weather Station │   │   Timestamp     │
@@ -133,20 +133,20 @@ This multi-modal approach significantly outperforms single-source prediction met
          ▼                     ▼                     ▼
 ```
 
-### 2️⃣ Feature Extraction
+### 2️ Feature Extraction
 - **Sky Images**: Processed through CNN (ResNet/MobileNet/EfficientNet) to extract visual features like cloud patterns, opacity, and sky conditions
 - **Weather Data**: Normalized and encoded through MLP layers
 - **Sun Position**: Calculated using pvlib library for precise zenith, azimuth, and elevation angles
 
-### 3️⃣ Temporal Modeling
+### 3️ Temporal Modeling
 - Historical sequences (configurable, default 12 timesteps) are processed through LSTM or Transformer encoders
 - Captures temporal patterns, trends, and cyclical variations
 
-### 4️⃣ Multi-Modal Fusion
+### 4️ Multi-Modal Fusion
 - Features from all modalities are combined using attention-based fusion
 - The model learns to weight different modalities based on context
 
-### 5️⃣ Power Prediction
+### 5️ Power Prediction
 - Fused features pass through regression head
 - Outputs DC power in Watts with optional uncertainty estimation
 
@@ -242,7 +242,7 @@ The architecture shows the complete data flow:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 PV-Power-Estimation/
